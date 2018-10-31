@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
 # Install revealjs
 RUN mkdir -p /revealjs
 WORKDIR /revealjs
-RUN git clone https://github.com/hakimel/reveal.js.git .
+RUN git clone --depth=1 https://github.com/hakimel/reveal.js.git .
 RUN npm install
 
 RUN mkdir -p /revealjs/presentations
@@ -25,24 +25,16 @@ ADD ./demo_presentation /revealjs/demo_presentation
 #################
 
 # Install MathJax
-RUN git clone https://github.com/mathjax/MathJax.git /revealjs/MathJax
+RUN git clone --depth=1 https://github.com/mathjax/MathJax.git /revealjs/MathJax
+
+# Install plugins
+RUN git clone --depth=1 https://github.com/rajgoel/reveal.js-plugins /tmp/pl &&mv -v /tmp/pl/* /revealjs/plugin && rm -r /tmp/pl
 
 # Install Menu
-RUN git clone https://github.com/denehyg/reveal.js-menu.git /revealjs/plugin/menu
-
-
-# Install Chalkboard
-RUN mkdir -p /revealjs/plugin/chalkboard
-RUN git clone https://github.com/rajgoel/reveal.js-plugins.git /revealjs/plugin/tmp && mv /revealjs/plugin/tmp/chalkboard /revealjs/plugin && rm -r /revealjs/plugin/tmp
-
-# Install Footer
-RUN mkdir -p /revealjs/plugin/footer && cd /revealjs/plugin/footer && wget https://raw.githubusercontent.com/e-gor/Reveal.js-Title-Footer/master/plugin/title-footer/title-footer.css && wget https://raw.githubusercontent.com/e-gor/Reveal.js-Title-Footer/master/plugin/title-footer/title-footer.js
-
-# Install Charts
-RUN mkdir -p /revealjs/plugin/chartjs && cd /revealjs/plugin/chartjs && wget https://gitlab.com/dvenkatsagar/reveal-chart/raw/master/plugin/chartjs/Chart.min.js && wget https://gitlab.com/dvenkatsagar/reveal-chart/raw/master/plugin/chartjs/charted.js 
+RUN git clone --depth=1 https://github.com/denehyg/reveal.js-menu.git /revealjs/plugin/menu
 
 # Install vis.js
-RUN mkdir -p /revealjs/plugin/visjs && git clone https://github.com/almende/vis.git /revealjs/plugin/visjs
+RUN mkdir -p /revealjs/plugin/visjs && git clone --depth=1 https://github.com/almende/vis.git /revealjs/plugin/visjs
 
 
 ADD ./docker-entrypoint.sh /
